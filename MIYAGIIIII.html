@@ -1,0 +1,319 @@
+<html><head><base href="." /><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><title>Elegant Login</title><style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(45deg, #6b8dd6, #8e37d7);
+    position: relative;
+    overflow: hidden;
+}
+
+body::before {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: 
+        repeating-linear-gradient(0deg,
+            transparent 0,
+            transparent 100px,
+            rgba(255, 255, 255, 0.1) 100px,
+            rgba(255, 255, 255, 0.1) 102px
+        ),
+        repeating-linear-gradient(90deg,
+            transparent 0,
+            transparent 100px,
+            rgba(255, 255, 255, 0.1) 100px,
+            rgba(255, 255, 255, 0.1) 102px
+        );
+    z-index: 0;
+    animation: floatingFlowers 30s linear infinite;
+}
+
+@keyframes floatingFlowers {
+    0% { background-position: 0 0; }
+    100% { background-position: 100px 100px; }
+}
+
+.flower {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    z-index: 0;
+}
+
+.bubble {
+    position: absolute;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    pointer-events: none;
+    animation: float linear infinite;
+}
+
+@keyframes float {
+    0% {
+        transform: translateY(100vh) scale(0);
+        opacity: 0;
+    }
+    50% { opacity: 0.8; }
+    100% {
+        transform: translateY(-100px) scale(1);
+        opacity: 0;
+    }
+}
+
+.login-container {
+    background: rgba(255, 255, 255, 0.95);
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+    width: 100%;
+    max-width: 400px;
+    position: relative;
+    z-index: 1;
+    cursor: move;
+    user-select: none;
+    transition: transform 0.1s ease;
+}
+
+.login-container.dragging {
+    opacity: 0.8;
+    transform: scale(1.02);
+    box-shadow: 0 12px 32px rgba(0,0,0,0.3);
+}
+
+h1 {
+    color: #333;
+    text-align: center;
+    margin-bottom: 1.5rem;
+    font-size: 2rem;
+}
+
+.input-group {
+    margin-bottom: 1.5rem;
+    position: relative;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #ddd;
+    border-radius: 6px;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+}
+
+.input-group input:focus {
+    outline: none;
+    border-color: #8e37d7;
+}
+
+.input-group label {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #666;
+    transition: all 0.3s ease;
+    pointer-events: none;
+    background: white;
+    padding: 0 4px;
+}
+
+.input-group input:focus ~ label,
+.input-group input:not(:placeholder-shown) ~ label {
+    top: 0;
+    font-size: 0.8rem;
+    color: #8e37d7;
+}
+
+button {
+    width: 100%;
+    padding: 12px;
+    background: linear-gradient(45deg, #6b8dd6, #8e37d7);
+    border: none;
+    border-radius: 6px;
+    color: white;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+.links {
+    margin-top: 1rem;
+    text-align: center;
+}
+
+.links a {
+    color: #6b8dd6;
+    text-decoration: none;
+    font-size: 0.9rem;
+    margin: 0 10px;
+    transition: color 0.3s ease;
+}
+
+.links a:hover {
+    color: #8e37d7;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+}
+
+.error {
+    animation: shake 0.5s ease;
+    border-color: #ff3333 !important;
+}
+</style></head><body>
+    <svg class="flower" style="left: 10%; top: 20%;">
+        <path d="M20,0 Q25,15 20,20 Q15,15 20,0" fill="#ffb3d9" />
+        <path d="M20,0 Q25,-15 20,-20 Q15,-15 20,0" fill="#ffb3d9" transform="rotate(72 20 0)" />
+        <path d="M20,0 Q25,-15 20,-20 Q15,-15 20,0" fill="#ffb3d9" transform="rotate(144 20 0)" />
+        <path d="M20,0 Q25,-15 20,-20 Q15,-15 20,0" fill="#ffb3d9" transform="rotate(216 20 0)" />
+        <path d="M20,0 Q25,-15 20,-20 Q15,-15 20,0" fill="#ffb3d9" transform="rotate(288 20 0)" />
+        <circle cx="20" cy="0" r="3" fill="#ffcc00" />
+    </svg>
+    
+    <div class="login-container">
+        <h1>Welcome Back</h1>
+        <form id="loginForm">
+            <div class="input-group">
+                <input type="email" id="email" placeholder=" " required>
+                <label for="email">Email</label>
+            </div>
+            <div class="input-group">
+                <input type="password" id="password" placeholder=" " required>
+                <label for="password">Password</label>
+            </div>
+            <button type="submit">Sign In</button>
+        </form>
+        <div class="links">
+            <a href="https://example.com/forgot-password">Forgot Password?</a>
+            <a href="https://example.com/signup">Create Account</a>
+        </div>
+    </div>
+
+<script>
+function createFlowers() {
+    const flowerTemplate = document.querySelector('.flower');
+    for(let i = 0; i < 10; i++) {
+        const flower = flowerTemplate.cloneNode(true);
+        flower.style.left = Math.random() * 100 + '%';
+        flower.style.top = Math.random() * 100 + '%';
+        flower.style.transform = `rotate(${Math.random() * 360}deg) scale(${0.5 + Math.random()})`;
+        flower.style.animation = `floatingFlowers ${10 + Math.random() * 20}s linear infinite`;
+        document.body.appendChild(flower);
+    }
+    flowerTemplate.remove();
+}
+
+function createBubble() {
+    const bubble = document.createElement('div');
+    bubble.className = 'bubble';
+    const size = 10 + Math.random() * 20;
+    bubble.style.width = `${size}px`;
+    bubble.style.height = `${size}px`;
+    bubble.style.left = `${Math.random() * 100}%`;
+    const duration = 4 + Math.random() * 4;
+    bubble.style.animation = `float ${duration}s linear infinite`;
+    document.body.appendChild(bubble);
+    setTimeout(() => bubble.remove(), duration * 1000);
+}
+
+// Drag and Drop functionality
+const loginContainer = document.querySelector('.login-container');
+let isDragging = false;
+let currentX;
+let currentY;
+let initialX;
+let initialY;
+let xOffset = 0;
+let yOffset = 0;
+
+loginContainer.addEventListener('mousedown', dragStart);
+document.addEventListener('mousemove', drag);
+document.addEventListener('mouseup', dragEnd);
+
+function dragStart(e) {
+    initialX = e.clientX - xOffset;
+    initialY = e.clientY - yOffset;
+
+    if (e.target === loginContainer || loginContainer.contains(e.target)) {
+        isDragging = true;
+        loginContainer.classList.add('dragging');
+    }
+}
+
+function drag(e) {
+    if (isDragging) {
+        e.preventDefault();
+        currentX = e.clientX - initialX;
+        currentY = e.clientY - initialY;
+        xOffset = currentX;
+        yOffset = currentY;
+        setTranslate(currentX, currentY, loginContainer);
+    }
+}
+
+function dragEnd(e) {
+    initialX = currentX;
+    initialY = currentY;
+    isDragging = false;
+    loginContainer.classList.remove('dragging');
+}
+
+function setTranslate(xPos, yPos, el) {
+    el.style.transform = `translate3d(${xPos}px, ${yPos}px, 0)`;
+}
+
+// Initialize other features
+createFlowers();
+setInterval(createBubble, 300);
+
+document.getElementById('loginForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const email = document.getElementById('email');
+    const password = document.getElementById('password');
+    
+    if (!email.value || !password.value) {
+        if (!email.value) {
+            email.classList.add('error');
+            setTimeout(() => email.classList.remove('error'), 500);
+        }
+        if (!password.value) {
+            password.classList.add('error');
+            setTimeout(() => password.classList.remove('error'), 500);
+        }
+        return;
+    }
+    
+    console.log('Login attempted with:', {
+        email: email.value,
+        password: password.value
+    });
+    
+    alert('Login successful!');
+});
+
+document.querySelectorAll('input').forEach(input => {
+    input.addEventListener('focus', () => {
+        input.classList.remove('error');
+    });
+});
+</script>
+</body></html>
